@@ -23,8 +23,8 @@ rate_monitor_buffer_ratio=1.5   # maximum buffer size between bitrate conformanc
 
 # second argument in extension
 # first argument is video id
-source="uploads/${1}/${1}.${2}"
-s3URL="${3}"
+source="uploads/${1}.${2}"
+day="${3}"
 target="uploads/${1}"
 if [[ ! "${target}" ]]; then
   target="${source##*/}" # leave only last component of path
@@ -67,7 +67,7 @@ for rendition in "${renditions[@]}"; do
   bandwidth="$(echo ${bitrate} | grep -oE '[[:digit:]]+')000"
   # name must be somehow prefixed with the s3 URL
   name="${height}p"
-  endpoint="${1}/${name}.m3u8"
+  endpoint="/${1}/${name}.m3u8"
   
   # cmd+=" ${static_params} -vf scale=w=${width}:h=${height}:force_original_aspect_ratio=decrease"
   cmd+=" ${static_params} -vf scale=w=${width}:h=${height}"
@@ -87,4 +87,4 @@ echo -e "${master_playlist}" > ${target}/playlist.m3u8
 
 echo "Done - encoded HLS is at ${target}/"
 
-# ./curl_transcoding_finished.sh ${1}
+ ./curl_transcoding_finished.sh ${1} ${3}

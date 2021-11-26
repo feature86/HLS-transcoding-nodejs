@@ -8,7 +8,9 @@
 # the input will be of the format 
 # ./curl_transcoding_finished.sh -directory "ID_OF_VIDEO_FOLDER"
 VIDEO_DIRECTORY="$1"
+DAY="$2"
 
 echo "$VIDEO_DIRECTORY"
+echo "$DAY"
 
-curl http://127.0.0.1:3000/baremetal/$VIDEO_DIRECTORY
+curl http://127.0.0.1:5000/hook/$VIDEO_DIRECTORY/$DAY
