@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+export LC_NUMERIC="en_US.UTF-8"
 set -e
 
 # Usage create-vod-hls.sh SOURCE_FILE [OUTPUT_NAME]
@@ -67,7 +67,7 @@ for rendition in "${renditions[@]}"; do
   bandwidth="$(echo ${bitrate} | grep -oE '[[:digit:]]+')000"
   # name must be somehow prefixed with the s3 URL
   name="${height}p"
-  endpoint="${s3URL}/${1}/${name}.m3u8"
+  endpoint="${1}/${name}.m3u8"
   
   # cmd+=" ${static_params} -vf scale=w=${width}:h=${height}:force_original_aspect_ratio=decrease"
   cmd+=" ${static_params} -vf scale=w=${width}:h=${height}"
@@ -87,4 +87,4 @@ echo -e "${master_playlist}" > ${target}/playlist.m3u8
 
 echo "Done - encoded HLS is at ${target}/"
 
-./curl_transcoding_finished.sh ${1}
+# ./curl_transcoding_finished.sh ${1}
