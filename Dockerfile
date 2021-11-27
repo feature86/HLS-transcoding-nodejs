@@ -1,28 +1,20 @@
-FROM node:carbon
+FROM node:17-alpine
+LABEL maintainer="feature86@gmx.net"
 
-ARG MACHINE_NAME={{app_name}}
-ENV MACHINE_NAME={{app_name}}
+RUN apk add --update --no-cache ffmpeg exiftool bash curl
 
-WORKDIR /usr/src/{{app_name}}
-RUN mkdir -p /usr/src/{{app_name}}/logs
+# Node heap size 6gb (for mono repo build)
+ENV NODE_OPTIONS="--max-old-space-size=6144"
 
-# install app dependencies
-COPY package*.json ./
 
-# install nano cmd editor as it's not bundled with node:carbon
-RUN apt-get update
-RUN apt-get install nano
+RUN mkdir /hls
+WORKDIR /hls
 
-# test bcrypt segmentation fault error
-RUN npm install
-RUN npm install pm2 -g
-RUN npm rebuild bcrypt --build-from-source
-# RUN npm rebuild bcrypt --build-from-source
+COPY . /hls
 
-# bundle app ADD source
-COPY . .
+RUN yarn install
+RUN yarn global add pm2
 
-EXPOSE 3000
+EXPOSE 5000
 
-# todo define run script for both server and backend in forever mode
-CMD pm2-docker server/loader.js --machine-name $MACHINE_NAME
+CMD yarn start
