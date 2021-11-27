@@ -62,7 +62,7 @@ const main = async () => {
     }),
   );
   srv.use(cors());
-  srv.set('views', `views`);
+  srv.set('views', `${__dirname}/views`);
   srv.set('view engine', 'ejs');
 
   srv.listen(config.PORT, () => {
